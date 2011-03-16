@@ -1,4 +1,4 @@
-// Constructor object
+// Constructor function
 var StemVille = function(in_delay, in_elementId) {
     return {
 	    iter: 1,
@@ -16,6 +16,16 @@ var StemVille = function(in_delay, in_elementId) {
     	    plot_y: [],//["SA-06-G040001", "SA-09-G070001", "SA-QAY-G130001"],
     	    addPlotY: function(data) {
     	      this.plot_y.push(data);  
+    	    },
+    	    removePlotY: function(data) {
+    	      var len = this.plot_y.length;
+    	      for (var i=0; i < len; i++) {
+    	          if (data === this.plot_y[i]) {    	              
+                      this.plot_y.splice(i,1);
+    	              return true;
+    	          }
+    	      }
+    	      return false;
     	    },
     	    label_x: 'days',
     	    label_y: 'disease spread?',	    

@@ -24,12 +24,41 @@
 		STEMVILLE.max_iter = 100;
 		
 		var loadParams = function() {
+			var av = $('#plot_available ul');	
 			STEMVILLE.plotOptions.params.forEach(function(name) {
-				$('#select_plot').append('<option name="'+name+'">'+name+'</option>');
+				if (name !== 'iteration' && name !== 'time') {
+					av.append('<li><a class="add_to_plot">'+name+'</a></li>');
+				}			
 			});
 		}
+		var loadPlots = function() {
+			var av = $('#plot_active ul');
+			av.html('');
+			STEMVILLE.plotOptions.plot_y.forEach(function(name) {
+				//$('#select_plot').append('<option name="'+name+'">'+name+'</option>');
+				av.append('<li><a class="remove_from_plot">'+name+'</a></li>');
+				
+			});
+		}
+		
+		$('.add_to_plot').live('click', function() {
+			var name = $(this).html();
+			STEMVILLE.plotOptions.addPlotY(name);
+			$(this).remove();
+			loadPlots();
+			STEMVILLE.render();
+		});
+		$('.remove_from_plot').live('click', function() {
+			var name = $(this).html();
+			if (STEMVILLE.plotOptions.removePlotY(name)) {
+				$(this).remove();
+				$('#plot_available ul').append('<li><a class="add_to_plot">'+name+'</a></li>');
+				STEMVILLE.render();
+			}			
+		});
 		$(document).ready(function() {
 			setTimeout("loadParams()", 1000);
+			
 		});
 		</script>
 		
@@ -42,7 +71,10 @@
 		html,body {
 			width:100%;
 			height:100%;
-			overflow:hidden;
+			min-height:800px;
+		}
+		a {
+			cursor:pointer;
 		}
 		#control {
 			height:60px;
@@ -69,7 +101,6 @@
 			background: #1967a1;
 			color: #fff;
 			padding: 4px;
-			cursor:pointer;
 		}
 		#control a:hover {
 			background: #6bb2e8;
@@ -86,6 +117,22 @@
 			margin-right: 20px;
 		}
 		
+		#plot_settings {
+			width: 700px;
+			margin: 0 auto;
+		}
+		#plot_settings div {
+			float:left;
+		}
+		#plot_settings > div:first-child {
+			width:350px;
+		}
+		#plot_settings ul {
+			list-style-type: none;
+		}
+		#plot_settings ul li {
+			margin-left:10px;
+		}
 		
 		#chartdiv {
 			margin:20px auto;
@@ -95,16 +142,24 @@
 	<body>
 		<div id="chartdiv" style="height:400px;width:700px;"></div>
 		
+		<div id="plot_settings">
+			<div id="plot_available">
+				<h3>Available [click to plot]</h3>
+				<ul>
+				</ul>
+			</div>
+			<div id="plot_active">
+				<h3>Activated [click to remove]</h3>
+				<ul>
+				</ul>
+			</div>
+		</div>
 		<div id="control">
 			<div>
 				<ul>
 					<li>
 						<label>Request delay (ms):</label>
 						<input type="text" id="set_delay" />
-					</li>
-					<li>
-						<select id="select_plot"></select><a id="set_plot">Plot</a>
-
 					</li>
 					<li>
 						<a onclick="STEMVILLE.reset()">Reset</a>
@@ -119,11 +174,6 @@
 			$('#set_delay').attr('value', STEMVILLE.delay)
 			$('#set_delay').change(function(){
 				STEMVILLE.delay = parseInt($(this).attr('value'));
-			});
-			
-			$('#set_plot').click(function() {
-				var to_plot = $('#select_plot').attr('value');
-				STEMVILLE.plotOptions.addPlotY(to_plot);
 			});
 		</script>
 	</body>
