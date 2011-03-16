@@ -134,6 +134,7 @@ var StemVille = function(in_delay, in_elementId) {
                         tickOptions:{formatString:'%d'},
                         min: that.plotOptions.min_y,
                         label: that.plotOptions.label_y,
+                        numberTicks: 8,
                         labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
                     },
                     xaxis: {
@@ -141,6 +142,7 @@ var StemVille = function(in_delay, in_elementId) {
                         tickOptions:{formatString:'%d'},
                         min: that.plotOptions.min_x,
                         label: that.plotOptions.label_x,
+                        numberTicks: 12,
                         labelRenderer: $.jqplot.CanvasAxisLabelRenderer,
                     }
                 },
